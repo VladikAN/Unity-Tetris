@@ -1,0 +1,8 @@
+.vs/
+.idea/
+bin/
+obj/
+CustomAssemblies/
+unity/Library/
+*.userprefs
+*.meta
