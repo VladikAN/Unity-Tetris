@@ -4,5 +4,6 @@ bin/
 obj/
 CustomAssemblies/
 unity/Library/
+unity/Temp/
 *.userprefs
 *.meta

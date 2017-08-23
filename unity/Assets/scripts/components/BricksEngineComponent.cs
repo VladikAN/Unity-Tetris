@@ -48,7 +48,7 @@ public class BricksEngineComponent : MonoBehaviour
     /// </summary>
     public void Update()
     {
-        // Update user input
+        // Update user touch/keyboard input
         UpdateInput();
 
         // If field is collided with figure then game is over
@@ -176,10 +176,14 @@ public class BricksEngineComponent : MonoBehaviour
         RenderAllShapes();
     }
 
+    /// <summary>
+    /// Read user input and move figure according to that
+    /// </summary>
     private void UpdateInput()
     {
         if (Input.touchCount > 0)
         {
+            // Input logic for touch screen
             for (var i = 0; i < Input.touchCount; i++)
             {
                 var touch = Input.GetTouch(i);
@@ -205,19 +209,14 @@ public class BricksEngineComponent : MonoBehaviour
         }
         else
         {
+            // Input logic for keyboard
             var horizontal = Input.GetAxis("Horizontal");
-            if (horizontal != 0)
-            {
-                _left |= horizontal < 0;
-                _right = !_left;
-            }
+            _left |= horizontal < 0;
+            _right |= horizontal > 0;
 
             var vertical = Input.GetAxis("Vertical");
-            if (vertical != 0)
-            {
-                _down |= vertical < 0;
-                _rotate = !_down;
-            }
+            _down |= vertical < 0;
+            _rotate = vertical > 0;
         }
 
         _inputTimeout -= Time.deltaTime;
@@ -253,6 +252,9 @@ public class BricksEngineComponent : MonoBehaviour
             {
                 _currentFigure.MoveDownIfAllowed(_field);
             }
+
+            // Update time will allow to move figure left and right after landing
+            UpdateTime();
             _down = false;
         }
 
@@ -268,7 +270,7 @@ public class BricksEngineComponent : MonoBehaviour
     /// </summary>
     private void UpdateStats(int deletedLines)
     {
-        _score += 10 * deletedLines;
+        _score += 10 * deletedLines + 5 * (deletedLines != 0 ? deletedLines - 1 : 0);
         _level = _score / 100 + 1;
         _gameSpeed = StartGameSpeed + GameSpeedModificator * (_level - 1);
 
