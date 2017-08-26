@@ -14,14 +14,11 @@ public class ButtonComponent : MonoBehaviour
     private float? _coolDown;
 
     /// <summary>
-    /// Init button component and validate input
+    /// Validate input
     /// </summary>
-	public void Start()
+	public void OnValidate()
     {
-		if (IdleSprite == null || PressedSprite == null)
-        {
-            throw new Exception("Idle and Pressed sprites must be specified");
-        }
+		if (IdleSprite == null || PressedSprite == null) throw new Exception("Idle and Pressed sprites must be specified");
 	}
 
     public void Update()

@@ -7,14 +7,13 @@ public class InfoBlockComponent : MonoBehaviour
     /// Link to text mesh
     /// </summary>
     public TextMesh Mesh;
-
-    public void Start()
+    
+    /// <summary>
+    /// Validate parameters
+    /// </summary>
+    public void OnValidate()
     {
-        // Validate parameters
-        if (Mesh == null)
-        {
-            throw new Exception("Mesh is not set for InfoBlockComponent");
-        }
+        if (Mesh == null) throw new Exception("Mesh is not set for InfoBlockComponent");
     }
 
     public void PrintValue(int value)

@@ -27,9 +27,6 @@ public class BricksRenderComponent : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        // Validate input parameters
-        Validate();
-
         // Fill objects pool by Height * Width objects
         _objectsPool = new GameObject[Height, Width];
         for (var i = 0; i < Height; i++)
@@ -102,26 +99,11 @@ public class BricksRenderComponent : MonoBehaviour
         Gizmos.DrawLine(point4, point1);
     }
 
-    private void Validate()
+    public void OnValidate()
     {
-        if (Template == null)
-        {
-            throw new Exception("Template is not specified for Bricks Render");
-        }
-
-        if (TemplateSize == 0)
-        {
-            throw new Exception("Template Size is not specified for Bricks Render");
-        }
-
-        if (Width == 0)
-        {
-            throw new Exception("Width is not specified for Bricks Render");
-        }
-
-        if (Height == 0)
-        {
-            throw new Exception("Height is not specified for Bricks Render");
-        }
+        if (Template == null) throw new Exception("Template is not specified for Bricks Render");
+        if (TemplateSize == 0) throw new Exception("Template Size is not specified for Bricks Render");
+        if (Width == 0) throw new Exception("Width is not specified for Bricks Render");
+        if (Height == 0) throw new Exception("Height is not specified for Bricks Render");
     }
 }

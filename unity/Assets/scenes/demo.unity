@@ -217,7 +217,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4076636334732292, guid: 6ded561956d257b46ab003824b39a6ac, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1638862712954640, guid: 6ded561956d257b46ab003824b39a6ac, type: 2}
       propertyPath: m_Name
@@ -459,6 +459,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 343898888}
+  - {fileID: 1775850035}
   - {fileID: 454433333}
   - {fileID: 704949334}
   - {fileID: 2047088710}
@@ -481,6 +482,7 @@ MonoBehaviour:
   LevelInfoBlock: {fileID: 1532732838}
   FieldRender: {fileID: 972982223}
   NextFigureRender: {fileID: 256609248}
+  PausedLabel: {fileID: 1775850034}
   StartGameSpeed: 0.7
   GameSpeedModificator: 0.1
   InputSpeed: 0.2
@@ -709,7 +711,7 @@ Transform:
   - {fileID: 1310761041}
   - {fileID: 917108442}
   m_Father: {fileID: 1091236961}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1532732838 stripped
 MonoBehaviour:
@@ -759,11 +761,94 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4332764770758704, guid: a4c0c8a49c7ca924d98049e6917bf347, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4c0c8a49c7ca924d98049e6917bf347, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1775850034
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1775850035}
+  - component: {fileID: 1775850037}
+  - component: {fileID: 1775850036}
+  m_Layer: 0
+  m_Name: pause-label
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1775850035
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1775850034}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.49, y: -2.9, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1091236961}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!102 &1775850036
+TextMesh:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1775850034}
+  m_Text: Paused
+  m_OffsetZ: 0
+  m_CharacterSize: 1
+  m_LineSpacing: 1
+  m_Anchor: 0
+  m_Alignment: 0
+  m_TabSize: 4
+  m_FontSize: 16
+  m_FontStyle: 0
+  m_RichText: 1
+  m_Font: {fileID: 12800000, guid: 990fd89bbcbec3d4db1ab280a7cf214a, type: 3}
+  m_Color:
+    serializedVersion: 2
+    rgba: 4282005299
+--- !u!23 &1775850037
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1775850034}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 990fd89bbcbec3d4db1ab280a7cf214a, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1001 &2047088709
 Prefab:
   m_ObjectHideFlags: 0
@@ -801,7 +886,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4076636334732292, guid: 6ded561956d257b46ab003824b39a6ac, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1638862712954640, guid: 6ded561956d257b46ab003824b39a6ac, type: 2}
       propertyPath: m_Name
