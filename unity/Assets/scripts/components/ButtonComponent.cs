@@ -5,10 +5,7 @@ public class ButtonComponent : MonoBehaviour
 {
     public Sprite IdleSprite;
     public Sprite PressedSprite;
-    public bool Left;
-    public bool Right;
-    public bool Rotate;
-    public bool Down;
+    public ButtonEvent Event;
 
     public float PressedTime;
     private float? _coolDown;

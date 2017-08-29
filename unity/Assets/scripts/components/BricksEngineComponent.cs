@@ -2,6 +2,8 @@
 using System;
 using BricksGame;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class BricksEngineComponent : MonoBehaviour
 {
@@ -14,21 +16,17 @@ public class BricksEngineComponent : MonoBehaviour
     public float GameSpeedModificator;
     public float InputSpeed;
 
-    private bool _running;
+    private bool _running = true;
     private int _score;
 
-    private Field _field;
-    private Figure _currentFigure;
-    private Figure _nextFigure;
+    private Field _field = new Field();
+    private Figure _currentFigure = new Figure();
+    private Figure _nextFigure = new Figure();
 
     private float _inputTimeout;
     private float _gameSpeed;
     private float _nextTimeFrame;
-
-    private bool _left;
-    private bool _right;
-    private bool _down;
-    private bool _rotate;
+    private ButtonEvent _buttonEvent = ButtonEvent.None;
 
     /// <summary>
     /// Use this for initialization
@@ -36,10 +34,18 @@ public class BricksEngineComponent : MonoBehaviour
     public void Start()
     {
         // Set initial state
-        SetInitinalState();
+        var loaded = Load();
+        if (!loaded)
+        {
+            _score = 0;
+            ChangeGameState(true);
+        }
+        else
+        {
+            ChangeGameState(false);
+        }
 
-        _running = true;
-        ChangeGameState(_running);
+        SetInitinalState(false);
 
         // Set next render frame
         UpdateTime();
@@ -57,7 +63,7 @@ public class BricksEngineComponent : MonoBehaviour
         if (_field.CheckCollision(_currentFigure))
         {
             // Reset game
-            SetInitinalState();
+            SetInitinalState(true);
         }
 
         if (_running && Time.time >= _nextTimeFrame)
@@ -94,6 +100,20 @@ public class BricksEngineComponent : MonoBehaviour
         FieldRender.Render(_currentFigure.Points, _currentFigure.X, _currentFigure.Y, false);
         NextFigureRender.Render(_nextFigure.Points);
     }
+    
+    /// <summary>
+    /// Hanle application close/hide event
+    /// </summary>
+    /// <param name="paused"></param>
+    public void OnApplicationPause(bool paused)
+    {
+        ChangeGameState(!paused);
+
+        if (paused)
+        {
+            Save();
+        }
+    }
 
     /// <summary>
     /// Validate all public parameters not null
@@ -109,55 +129,78 @@ public class BricksEngineComponent : MonoBehaviour
         if (GameSpeedModificator == 0) throw new Exception("Game Speed Modificator is not specified for this scene");
     }
 
-    public void ResumeGame()
-    {
-        ChangeGameState(true);
-    }
-
-    public void PauseGame()
-    {
-        ChangeGameState(false);
-    }
-
     private void ChangeGameState(bool? running = null)
     {
         _running = running ?? !_running;
+        _buttonEvent = ButtonEvent.None;
         PausedLabel.SetActive(!_running);
+    }
+
+    private void Save()
+    {
+        var bf = new BinaryFormatter();
+        var file = File.Open(Application.persistentDataPath + "/FileName.dat", FileMode.Create);
+        var data = new GameState
+        {
+            Score = _score,
+            Field = _field.Map,
+            Figure = _currentFigure.Points,
+            FigureX = _currentFigure.X,
+            FigureY = _currentFigure.Y,
+            Next = _nextFigure.Points,
+            NextX = _nextFigure.X,
+            NextY = _nextFigure.Y
+        };
+
+        bf.Serialize(file, data);
+        file.Close();
+    }
+
+    private bool Load()
+    {
+        if (File.Exists(Application.persistentDataPath + "/FileName.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/FileName.dat", FileMode.Open);
+            var data = (GameState)bf.Deserialize(file);
+            file.Close();
+
+            _score = data.Score;
+            _field = new Field(data.Field);
+            _currentFigure = new Figure(data.Figure);
+            _currentFigure.X = data.FigureX;
+            _currentFigure.Y = data.FigureY;
+            _nextFigure = new Figure(data.Next);
+            _nextFigure.X = data.NextX;
+            _nextFigure.Y = data.NextY;
+
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
     /// Reset all parameters to initial
     /// </summary>
-    private void SetInitinalState()
+    private void SetInitinalState(bool reset)
     {
         // Reset speed
         _inputTimeout = 0;
         _gameSpeed = StartGameSpeed;
 
         // Reset stats
-        _score = 0;
         UpdateStats(0);
 
         // Reset field and figures
-        if (_field == null)
+        if (reset)
         {
-            _field = new Field();
+            _field.Reset();
+            _currentFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
+            _currentFigure.X = 3;
+            _currentFigure.Y = 0;
+            _nextFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
         }
-        _field.Reset();
-
-        if (_currentFigure == null)
-        {
-            _currentFigure = new Figure();
-        }
-        _currentFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
-        _currentFigure.X = 3;
-        _currentFigure.Y = 0;
-
-        if (_nextFigure == null)
-        {
-            _nextFigure = new Figure();
-        }
-        _nextFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
     }
 
     /// <summary>
@@ -171,81 +214,88 @@ public class BricksEngineComponent : MonoBehaviour
         _inputTimeout -= Time.deltaTime;
         if (_inputTimeout >= 0)
         {
-            _left = false;
-            _right = false;
-            _down = false;
-            _rotate = false;
+            _buttonEvent = ButtonEvent.None;
             return;
         }
 
-        if (_left || _right || _down || _rotate)
+        if (_buttonEvent != ButtonEvent.None)
         {
             _inputTimeout = InputSpeed;
         }
 
-        if (_left)
+        if (_buttonEvent.HasFlag(ButtonEvent.PauseAndResume))
         {
-            _currentFigure.MoveLeftIfAllowed(_field);
-        }
-        
-        if (_right)
-        {
-            _currentFigure.MoveRightIfAllowed(_field);
+            ChangeGameState();
         }
 
-        if (_down)
+        if (_buttonEvent.HasFlag(ButtonEvent.SaveAndExit))
         {
-            while (_currentFigure.IsAllowedToMoveDown(_field))
+            ChangeGameState(false);
+            Save();
+            Application.Quit();
+        }
+
+        if (_running)
+        {
+            if (_buttonEvent.HasFlag(ButtonEvent.Left))
             {
-                _currentFigure.MoveDownIfAllowed(_field);
+                _currentFigure.MoveLeftIfAllowed(_field);
             }
 
-            // Update time will allow to move figure left and right after landing
-            UpdateTime();
-        }
+            if (_buttonEvent.HasFlag(ButtonEvent.Right))
+            {
+                _currentFigure.MoveRightIfAllowed(_field);
+            }
 
-        if (_rotate)
-        {
-            _currentFigure.RotateIfAllowed(_field);
+            if (_buttonEvent.HasFlag(ButtonEvent.Down))
+            {
+                var downAllowed = _currentFigure.IsAllowedToMoveDown(_field);
+                while (_currentFigure.IsAllowedToMoveDown(_field))
+                {
+                    _currentFigure.MoveDownIfAllowed(_field);
+                }
+
+                // Update time will allow to move figure left and right after landing
+                if (downAllowed)
+                {
+                    UpdateTime();
+                }
+            }
+
+            if (_buttonEvent.HasFlag(ButtonEvent.Rotate))
+            {
+                _currentFigure.RotateIfAllowed(_field);
+            }
         }
     }
 
     private void ReadInput()
     {
-        if (Input.GetButtonUp("Pause"))
+        // Input logic for keyboard
+        _buttonEvent |= Input.GetButtonUp("Pause") ? ButtonEvent.PauseAndResume : ButtonEvent.None;
+
+        var horizontal = Input.GetAxis("Horizontal");
+        _buttonEvent |= horizontal < 0 ? ButtonEvent.Left : ButtonEvent.None;
+        _buttonEvent |= horizontal > 0 ? ButtonEvent.Right : ButtonEvent.None;
+
+        var vertical = Input.GetAxis("Vertical");
+        _buttonEvent |= vertical < 0 ? ButtonEvent.Down : ButtonEvent.None;
+        _buttonEvent |= vertical > 0 ? ButtonEvent.Rotate : ButtonEvent.None;
+
+        // Input logic for touch screen and mouse
+        var positions = Input.touches.Where(x => x.phase == TouchPhase.Began || x.phase == TouchPhase.Stationary).Select(x => x.position).ToList();
+        if (Input.GetMouseButtonUp(0)) positions.Add(Input.mousePosition);
+
+        foreach (var position in positions)
         {
-            ChangeGameState();
-        }
-
-        if (_running)
-        {
-            // Input logic for keyboard
-            var horizontal = Input.GetAxis("Horizontal");
-            _left |= horizontal < 0;
-            _right |= horizontal > 0;
-
-            var vertical = Input.GetAxis("Vertical");
-            _down |= vertical < 0;
-            _rotate = vertical > 0;
-
-            // Input logic for touch screen and mouse
-            var positions = Input.touches.Where(x => x.phase == TouchPhase.Began || x.phase == TouchPhase.Stationary).Select(x => x.position).ToList();
-            if (Input.GetMouseButtonUp(0)) positions.Add(Input.mousePosition);
-
-            foreach (var position in positions)
+            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.up);
+            if (hit.collider != null)
             {
-                var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.up);
-                if (hit.collider != null)
-                {
-                    var button = hit.collider.GetComponent<ButtonComponent>();
-                    if (button == null) continue;
+                var button = hit.collider.GetComponent<ButtonComponent>();
+                if (button == null) continue;
 
-                    button.SetState(true);
-                    _left |= button.Left;
-                    _right |= button.Right;
-                    _down |= button.Down;
-                    _rotate |= button.Rotate;
-                }
+                button.SetState(true);
+                _buttonEvent |= button.Event;
             }
         }
     }

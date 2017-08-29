@@ -102,7 +102,7 @@ public class BricksRenderComponent : MonoBehaviour
     public void OnValidate()
     {
         if (Template == null) throw new Exception("Template is not specified for Bricks Render");
-        if (TemplateSize == 0) throw new Exception("Template Size is not specified for Bricks Render");
+        if (TemplateSize <= 0) throw new Exception("Template Size is not specified for Bricks Render");
         if (Width == 0) throw new Exception("Width is not specified for Bricks Render");
         if (Height == 0) throw new Exception("Height is not specified for Bricks Render");
     }
