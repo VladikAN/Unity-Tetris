@@ -598,8 +598,8 @@ PlayerSettings:
   facebookSdkVersion: 7.9.1
   apiCompatibilityLevel: 3
   cloudProjectId: 2dab3809-975f-4748-8599-f2907998430b
-  projectName: tetris-mobile-sample
-  organizationId: evil_is_good
+  projectName: The Game Of Bricks
+  organizationId: vladislav-nekhaichik-as-publisher
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

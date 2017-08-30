@@ -18,6 +18,7 @@ public class BricksEngineComponent : MonoBehaviour
 
     private bool _running = true;
     private int _score;
+    private int _bestScore;
 
     private Field _field = new Field();
     private Figure _currentFigure = new Figure();
@@ -38,14 +39,10 @@ public class BricksEngineComponent : MonoBehaviour
         if (!loaded)
         {
             _score = 0;
-            ChangeGameState(true);
-        }
-        else
-        {
-            ChangeGameState(false);
         }
 
-        SetInitinalState(false);
+        ChangeGameState(!loaded);
+        SetInitinalState(!loaded);
 
         // Set next render frame
         UpdateTime();
@@ -104,13 +101,11 @@ public class BricksEngineComponent : MonoBehaviour
     /// <summary>
     /// Hanle application close/hide event
     /// </summary>
-    /// <param name="paused"></param>
     public void OnApplicationPause(bool paused)
     {
-        ChangeGameState(!paused);
-
         if (paused)
         {
+            ChangeGameState(false);
             Save();
         }
     }
@@ -143,6 +138,7 @@ public class BricksEngineComponent : MonoBehaviour
         var data = new GameState
         {
             Score = _score,
+            BestScore = _bestScore,
             Field = _field.Map,
             Figure = _currentFigure.Points,
             FigureX = _currentFigure.X,
@@ -166,6 +162,7 @@ public class BricksEngineComponent : MonoBehaviour
             file.Close();
 
             _score = data.Score;
+            _bestScore = data.BestScore;
             _field = new Field(data.Field);
             _currentFigure = new Figure(data.Figure);
             _currentFigure.X = data.FigureX;
@@ -183,8 +180,11 @@ public class BricksEngineComponent : MonoBehaviour
     /// <summary>
     /// Reset all parameters to initial
     /// </summary>
-    private void SetInitinalState(bool reset)
+    private void SetInitinalState(bool useRandom)
     {
+        // Update best score
+        _bestScore = _bestScore < _score ? _score : _bestScore;
+
         // Reset speed
         _inputTimeout = 0;
         _gameSpeed = StartGameSpeed;
@@ -193,7 +193,7 @@ public class BricksEngineComponent : MonoBehaviour
         UpdateStats(0);
 
         // Reset field and figures
-        if (reset)
+        if (useRandom)
         {
             _field.Reset();
             _currentFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));

@@ -4,6 +4,7 @@
 public class GameState
 {
     public int Score { get; set; }
+    public int BestScore { get; set; }
     public byte[,] Field { get; set; }
     public byte[,] Figure { get; set; }
     public uint FigureX { get; set; }
