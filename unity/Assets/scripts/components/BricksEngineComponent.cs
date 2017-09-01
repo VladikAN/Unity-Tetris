@@ -8,6 +8,7 @@ using System.IO;
 public class BricksEngineComponent : MonoBehaviour
 {
     public InfoBlockComponent ScoreInfoBlock;
+    public InfoBlockComponent BestInfoBlock;
     public InfoBlockComponent LevelInfoBlock;
     public BricksRenderComponent FieldRender;
     public BricksRenderComponent NextFigureRender;
@@ -116,6 +117,7 @@ public class BricksEngineComponent : MonoBehaviour
     public void OnValidate()
     {
         if (ScoreInfoBlock == null) throw new Exception("Score Info Block is not specified for this scene");
+        if (BestInfoBlock == null) throw new Exception("Best Info Block is not specified for this scene");
         if (LevelInfoBlock == null) throw new Exception("Level Info Block is not specified for this scene");
         if (FieldRender == null) throw new Exception("Field Render is not specified for this scene");
         if (NextFigureRender == null) throw new Exception("Next Figure Render is not specified for this scene");
@@ -182,25 +184,23 @@ public class BricksEngineComponent : MonoBehaviour
     /// </summary>
     private void SetInitinalState(bool useRandom)
     {
-        // Update best score
-        _bestScore = _bestScore < _score ? _score : _bestScore;
-
         // Reset speed
         _inputTimeout = 0;
         _gameSpeed = StartGameSpeed;
 
-        // Reset stats
-        UpdateStats(0);
-
         // Reset field and figures
         if (useRandom)
         {
+            _score = 0;
             _field.Reset();
             _currentFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
             _currentFigure.X = 3;
             _currentFigure.Y = 0;
             _nextFigure.BuildNew(UnityEngine.Random.Range(0, 6), UnityEngine.Random.Range(0, 3));
         }
+
+        // Reset stats
+        UpdateStats(0);
     }
 
     /// <summary>
@@ -306,10 +306,13 @@ public class BricksEngineComponent : MonoBehaviour
     private void UpdateStats(int deletedLines)
     {
         _score += 10 * deletedLines + 5 * (deletedLines != 0 ? deletedLines - 1 : 0);
+        _bestScore = _bestScore < _score ? _score : _bestScore;
+
         var level = _score / 100 + 1;
-        _gameSpeed = StartGameSpeed + GameSpeedModificator * (level - 1);
+        _gameSpeed = StartGameSpeed - GameSpeedModificator * (level - 1);
 
         ScoreInfoBlock.PrintValue(_score);
+        BestInfoBlock.PrintValue(_bestScore);
         LevelInfoBlock.PrintValue(level);
     }
 

@@ -18,6 +18,6 @@ public class InfoBlockComponent : MonoBehaviour
 
     public void PrintValue(int value)
     {
-        Mesh.text = value >= 99999 ? "99999" : value.ToString("D5");
+        Mesh.text = value >= 999999 ? "999999" : value.ToString("D6");
     }
 }
