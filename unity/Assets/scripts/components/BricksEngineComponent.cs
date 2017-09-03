@@ -223,6 +223,14 @@ public class BricksEngineComponent : MonoBehaviour
             _inputTimeout = InputSpeed;
         }
 
+        if (_buttonEvent.HasFlag(ButtonEvent.Reset))
+        {
+            SetInitinalState(true);
+            _buttonEvent = ButtonEvent.None;
+            _inputTimeout = 0;
+            return;
+        }
+
         if (_buttonEvent.HasFlag(ButtonEvent.PauseAndResume))
         {
             ChangeGameState();
