@@ -433,11 +433,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4295101470199204, guid: d48bfd62d91c39c48aa7bb0f903e798b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0.41
+      value: -0.35
       objectReference: {fileID: 0}
     - target: {fileID: 4295101470199204, guid: d48bfd62d91c39c48aa7bb0f903e798b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: -1.7
       objectReference: {fileID: 0}
     - target: {fileID: 4295101470199204, guid: d48bfd62d91c39c48aa7bb0f903e798b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -466,6 +466,21 @@ Prefab:
     - target: {fileID: 1355152622210782, guid: d48bfd62d91c39c48aa7bb0f903e798b, type: 2}
       propertyPath: m_Name
       value: button-rotate
+      objectReference: {fileID: 0}
+    - target: {fileID: 61817013991614100, guid: d48bfd62d91c39c48aa7bb0f903e798b,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 61817013991614100, guid: d48bfd62d91c39c48aa7bb0f903e798b,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 61817013991614100, guid: d48bfd62d91c39c48aa7bb0f903e798b,
+        type: 2}
+      propertyPath: m_Offset.y
+      value: -0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d48bfd62d91c39c48aa7bb0f903e798b, type: 2}
