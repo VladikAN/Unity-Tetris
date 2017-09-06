@@ -296,7 +296,7 @@ public class BricksEngineComponent : MonoBehaviour
 
         foreach (var position in positions)
         {
-            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.up);
+            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.zero);
             if (hit.collider != null)
             {
                 var button = hit.collider.GetComponent<ButtonComponent>();
