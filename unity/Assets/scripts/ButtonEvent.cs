@@ -9,5 +9,6 @@ public enum ButtonEvent
     Down = 4,
     Rotate = 8,
     PauseAndResume = 16,
-    SaveAndExit = 32
+    SaveAndExit = 32,
+    Reset = 64
 }

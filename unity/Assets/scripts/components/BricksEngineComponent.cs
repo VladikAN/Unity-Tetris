@@ -223,6 +223,14 @@ public class BricksEngineComponent : MonoBehaviour
             _inputTimeout = InputSpeed;
         }
 
+        if (_buttonEvent.HasFlag(ButtonEvent.Reset))
+        {
+            SetInitinalState(true);
+            _buttonEvent = ButtonEvent.None;
+            _inputTimeout = 0;
+            return;
+        }
+
         if (_buttonEvent.HasFlag(ButtonEvent.PauseAndResume))
         {
             ChangeGameState();
@@ -288,7 +296,7 @@ public class BricksEngineComponent : MonoBehaviour
 
         foreach (var position in positions)
         {
-            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.up);
+            var hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(position), Vector2.zero);
             if (hit.collider != null)
             {
                 var button = hit.collider.GetComponent<ButtonComponent>();
