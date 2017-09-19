@@ -3,6 +3,7 @@
 bin/
 obj/
 CustomAssemblies/
+AssetStoreTools/
 unity/Library/
 unity/Temp/
 *.userprefs

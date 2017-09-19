@@ -223,7 +223,7 @@ public class BricksEngineComponent : MonoBehaviour
             _inputTimeout = InputSpeed;
         }
 
-        if (_buttonEvent.HasFlag(ButtonEvent.Reset))
+        if (HasFlag(_buttonEvent, ButtonEvent.Reset))
         {
             SetInitinalState(true);
             _buttonEvent = ButtonEvent.None;
@@ -231,12 +231,12 @@ public class BricksEngineComponent : MonoBehaviour
             return;
         }
 
-        if (_buttonEvent.HasFlag(ButtonEvent.PauseAndResume))
+        if (HasFlag(_buttonEvent, ButtonEvent.PauseAndResume))
         {
             ChangeGameState();
         }
 
-        if (_buttonEvent.HasFlag(ButtonEvent.SaveAndExit))
+        if (HasFlag(_buttonEvent, ButtonEvent.SaveAndExit))
         {
             ChangeGameState(false);
             Save();
@@ -245,17 +245,17 @@ public class BricksEngineComponent : MonoBehaviour
 
         if (_running)
         {
-            if (_buttonEvent.HasFlag(ButtonEvent.Left))
+            if (HasFlag(_buttonEvent, ButtonEvent.Left))
             {
                 _currentFigure.MoveLeftIfAllowed(_field);
             }
 
-            if (_buttonEvent.HasFlag(ButtonEvent.Right))
+            if (HasFlag(_buttonEvent, ButtonEvent.Right))
             {
                 _currentFigure.MoveRightIfAllowed(_field);
             }
 
-            if (_buttonEvent.HasFlag(ButtonEvent.Down))
+            if (HasFlag(_buttonEvent, ButtonEvent.Down))
             {
                 var downAllowed = _currentFigure.IsAllowedToMoveDown(_field);
                 while (_currentFigure.IsAllowedToMoveDown(_field))
@@ -270,7 +270,7 @@ public class BricksEngineComponent : MonoBehaviour
                 }
             }
 
-            if (_buttonEvent.HasFlag(ButtonEvent.Rotate))
+            if (HasFlag(_buttonEvent, ButtonEvent.Rotate))
             {
                 _currentFigure.RotateIfAllowed(_field);
             }
@@ -330,5 +330,13 @@ public class BricksEngineComponent : MonoBehaviour
     private void UpdateTime()
     {
         _nextTimeFrame = Time.time + _gameSpeed;
+    }
+
+    private bool HasFlag(Enum variable, Enum value)
+    {
+        ulong num = Convert.ToUInt64(value);
+        ulong num2 = Convert.ToUInt64(variable);
+
+        return (num2 & num) == num;
     }
 }
