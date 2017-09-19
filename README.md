@@ -1,3 +1,5 @@
+![master](https://ci.appveyor.com/api/projects/status/5xegoih2hu997ff0/branch/master?svg=true)
+
 # Introduction
 This is one of my games. I'm always happy to spend my free time for game development. Also this is my first Unity 3D expirience, especially in 2D.
 
