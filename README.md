@@ -2,6 +2,7 @@
 
 # Introduction
 This is one of games implemented by myself. I'm always glad to spend my free time for playing games and game development activities. Also this is my first Unity expirience, especially in 2D.
+
 This project is complete. Game was optimized and tested for Windows and Android platforms. Code is shared as a part of knowledge transfer.
 
 # Gameplay
